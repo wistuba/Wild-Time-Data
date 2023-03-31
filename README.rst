@@ -10,6 +10,16 @@ do not allow for downloading the datasets in the original repository.
 .. image:: yearbook.png
    :align: center
 
+
+Installation
+============
+
+Wild-Time-Data is available via PyPI.
+
+.. code-block:: bash
+
+  pip install wild-time-data
+
 Usage
 =====
 The following code will return a PyTorch dataset for the training partition of the arXiv dataset in 2023.
