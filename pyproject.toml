@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "wild_time_dataset"
+name = "wild_time_data"
 description = "WILDS distribution shift data"
 classifiers = [
     "Development Status :: 3 - Alpha",
