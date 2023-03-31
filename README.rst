@@ -46,6 +46,7 @@ Other Useful Functions
 Several other functions can be import from ``wild_time_data``.
 
 .. code-block:: python
+
   from wild_time_data import available_time_steps, input_dim, list_datasets, num_outputs
 
 * ``available_time_steps``: Provide the dataset name and the list of available time steps is return.
