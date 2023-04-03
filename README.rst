@@ -61,7 +61,7 @@ Several other functions can be imported from ``wild_time_data``.
   from wild_time_data import available_time_steps, input_dim, list_datasets, num_outputs
 
 * ``available_time_steps``: Given the dataset name, a sorted list of available time steps is returned. Example: ``available_time_steps("huffpost")`` returns ``[2012, 2013, 2014, 2015, 2016, 2017, 2018]``.
-* ``input_dim``: Given the dataset name, the input dimensionality is returned. For image datasets the shape of the image is returned. For text datasets the maximum number of words separated by spaces is returned. Example: ``input_dim("yearbook")`` returns ``(3, 32, 32)``.
+* ``input_dim``: Given the dataset name, the input dimensionality is returned. For image datasets the shape of the image is returned. For text datasets the maximum number of words separated by spaces is returned. Example: ``input_dim("yearbook")`` returns ``(1, 32, 32)``.
 * ``list_datasets``: Returns the list of all available datasets. Example: ``list_datasets()`` returns ``["arxiv", "drug", "fmow", "huffpost", "yearbook"]``.
 * ``num_outputs``: Given the dataset name, either the number of classes is returned or it returns 1. In cases where 1 is returned, this indicates that this is a regression dataset. Example: ``num_outputs("arxiv")`` returns ``172``.
 
