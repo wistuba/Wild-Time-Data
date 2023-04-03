@@ -2,6 +2,7 @@ import os
 import pickle
 from abc import ABC, abstractmethod
 
+import numpy as np
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
@@ -113,12 +114,15 @@ class HuffPost(WildTimeTextDataset):
 
 class Yearbook(WildTimeImageDataset):
     time_steps = [i for i in range(1930, 2014)]
-    input_dim = (3, 32, 32)
+    input_dim = (1, 32, 32)
     num_classes = 2
     drive_id = "1mPpxoX2y2oijOvW1ymiHEYd7oMu2vVRb"
     file_name = "yearbook.pkl"
 
+    def __init__(self, time_step, split, data_dir):
+        super().__init__(time_step, split, data_dir)
+        self._images = torch.FloatTensor(np.array([img.transpose(2, 0, 1)[0].reshape(*self.input_dim) for img in self._dataset["images"]]))
+        self._labels = torch.LongTensor(self._dataset["labels"])
+
     def __getitem__(self, idx):
-        image = torch.FloatTensor(self._dataset["images"][idx]).permute(2, 0, 1)
-        label = torch.LongTensor([self._dataset["labels"][idx]])[0]
-        return image, label
+        return self._images[idx], self._labels[idx]
