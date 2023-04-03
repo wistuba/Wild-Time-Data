@@ -52,7 +52,7 @@ class ArXiv(WildTimeTextDataset):
     file_name = "arxiv.pkl"
 
     def __getitem__(self, idx):
-        return self._dataset["title"][idx], torch.LongTensor([self._dataset["category"][idx]])
+        return self._dataset["title"][idx], torch.LongTensor([self._dataset["category"][idx]])[0]
 
     def __len__(self):
         return len(self._dataset["category"])
@@ -96,7 +96,7 @@ class FMoW(WildTimeImageDataset):
         idx = self._dataset["image_idxs"][idx]
         img = Image.open(self._root / "images" / f"rgb_img_{idx}.png").convert("RGB")
         image = self._transform(img)
-        label = torch.LongTensor([self._dataset["labels"][idx]])
+        label = torch.LongTensor([self._dataset["labels"][idx]])[0]
         return image, label
 
 
@@ -108,7 +108,7 @@ class HuffPost(WildTimeTextDataset):
     file_name = "huffpost.pkl"
 
     def __getitem__(self, idx):
-        return self._dataset["headline"][idx], torch.LongTensor([self._dataset["category"][idx]])
+        return self._dataset["headline"][idx], torch.LongTensor([self._dataset["category"][idx]])[0]
 
 
 class Yearbook(WildTimeImageDataset):
@@ -120,5 +120,5 @@ class Yearbook(WildTimeImageDataset):
 
     def __getitem__(self, idx):
         image = torch.FloatTensor(self._dataset["images"][idx]).permute(2, 0, 1)
-        label = torch.LongTensor([self._dataset["labels"][idx]])
+        label = torch.LongTensor([self._dataset["labels"][idx]])[0]
         return image, label
