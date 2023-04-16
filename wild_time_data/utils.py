@@ -1,115 +1,15 @@
+from hashlib import blake2b
 from pathlib import Path
 
 import gdown
-import numpy as np
-from sklearn.preprocessing import OneHotEncoder
-
-amino_char = [
-    "?",
-    "A",
-    "C",
-    "B",
-    "E",
-    "D",
-    "G",
-    "F",
-    "I",
-    "H",
-    "K",
-    "M",
-    "L",
-    "O",
-    "N",
-    "Q",
-    "P",
-    "S",
-    "R",
-    "U",
-    "T",
-    "W",
-    "V",
-    "Y",
-    "X",
-    "Z",
-]
-
-smiles_char = [
-    "?",
-    "#",
-    "%",
-    ")",
-    "(",
-    "+",
-    "-",
-    ".",
-    "1",
-    "0",
-    "3",
-    "2",
-    "5",
-    "4",
-    "7",
-    "6",
-    "9",
-    "8",
-    "=",
-    "A",
-    "C",
-    "B",
-    "E",
-    "D",
-    "G",
-    "F",
-    "I",
-    "H",
-    "K",
-    "M",
-    "L",
-    "O",
-    "N",
-    "P",
-    "S",
-    "R",
-    "U",
-    "T",
-    "W",
-    "V",
-    "Y",
-    "[",
-    "Z",
-    "]",
-    "_",
-    "a",
-    "c",
-    "b",
-    "e",
-    "d",
-    "g",
-    "f",
-    "i",
-    "h",
-    "m",
-    "l",
-    "o",
-    "n",
-    "s",
-    "r",
-    "u",
-    "t",
-    "y",
-]
 
 
-enc_protein = OneHotEncoder().fit(np.array(amino_char).reshape(-1, 1))
-enc_drug = OneHotEncoder().fit(np.array(smiles_char).reshape(-1, 1))
-
-
-def embed_protein(x):
-    return enc_protein.transform(np.array(x).reshape(-1, 1)).toarray().T
-
-
-def embed_drug(x):
-    return enc_drug.transform(np.array(x).reshape(-1, 1)).toarray().T
+def checksum_check(file, checksum):
+    hashing_function = blake2b()
+    with open(file, "rb") as f:
+        for chunk in iter(lambda: f.read(128 * hashing_function.block_size), b""):
+            hashing_function.update(chunk)
+    return hashing_function.hexdigest() == checksum
 
 
 def maybe_download(drive_id, destination_dir, destination_file_name):

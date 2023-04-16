@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from wilds import get_dataset
 
-from wild_time_data.utils import embed_drug, embed_protein, maybe_download
+from wild_time_data.utils import maybe_download
 
 
 class WildTimeDataset(Dataset, ABC):
@@ -65,20 +65,41 @@ class Drug(WildTimeDataset):
     num_classes = 1
     drive_id = "12SmQXA6f1fPd9__WAY8lravVAlDsFP7p"
     file_name = "drug.pkl"
+    mapping_amino = {key: value for value, key in enumerate("?ABCDEFGHIKLMNOPQRSTUVWXYZ")}
+    mapping_smiles = {
+        key: value
+        for value, key in enumerate(
+            "#%()+-.0123456789=?ABCDEFGHIKLMNOPRSTUVWYZ[]_abcdefghilmnorstuy"
+        )
+    }
+
+    @classmethod
+    def _transform_protein(cls, x):
+        tensor = torch.zeros((26, 1000))
+        for i, c in enumerate(x):
+            tensor[Drug.mapping_amino[c], i] = 1
+        return tensor
+
+    @classmethod
+    def _transform_drug(cls, x):
+        tensor = torch.zeros((63, 100))
+        for i, c in enumerate(x):
+            tensor[Drug.mapping_smiles[c], i] = 1
+        return tensor
 
     def __getitem__(self, index):
         return (
-            embed_drug(self._dataset.iloc[index].Drug_Enc),
-            embed_protein(self._dataset.iloc[index].Target_Enc),
-        ), self._dataset.iloc[index].Y
+            Drug._transform_drug(self._dataset.iloc[index].Drug_Enc),
+            Drug._transform_protein(self._dataset.iloc[index].Target_Enc),
+        ), torch.FloatTensor(self._dataset.iloc[index].Y)[0]
 
     def __len__(self):
         return len(self._dataset)
 
 
 class FMoW(WildTimeImageDataset):
-    time_steps = [i for i in range(16)]
-    input_dim = (3, 32, 32)
+    time_steps = list(range(16))
+    input_dim = (3, 224, 224)
     num_classes = 62
     drive_id = "1s_xtf2M5EC7vIFhNv_OulxZkNvrVwIm3"
     file_name = "fmow.pkl"
@@ -94,9 +115,9 @@ class FMoW(WildTimeImageDataset):
         self._root = get_dataset(dataset="fmow", root_dir=data_dir, download=True).root
 
     def __getitem__(self, idx):
-        idx = self._dataset["image_idxs"][idx]
-        img = Image.open(self._root / "images" / f"rgb_img_{idx}.png").convert("RGB")
-        image = self._transform(img)
+        image_idx = self._dataset["image_idxs"][idx]
+        image = Image.open(self._root / "images" / f"rgb_img_{image_idx}.png").convert("RGB")
+        image = self._transform(image)
         label = torch.LongTensor([self._dataset["labels"][idx]])[0]
         return image, label
 
@@ -121,7 +142,14 @@ class Yearbook(WildTimeImageDataset):
 
     def __init__(self, time_step, split, data_dir):
         super().__init__(time_step, split, data_dir)
-        self._images = torch.FloatTensor(np.array([img.transpose(2, 0, 1)[0].reshape(*self.input_dim) for img in self._dataset["images"]]))
+        self._images = torch.FloatTensor(
+            np.array(
+                [
+                    img.transpose(2, 0, 1)[0].reshape(*self.input_dim)
+                    for img in self._dataset["images"]
+                ]
+            )
+        )
         self._labels = torch.LongTensor(self._dataset["labels"])
 
     def __getitem__(self, idx):
