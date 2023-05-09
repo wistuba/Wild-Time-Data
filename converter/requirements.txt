@@ -1,0 +1,4 @@
+gdown
+h5py
+pandas<2.0.0
+wilds==2.0.0

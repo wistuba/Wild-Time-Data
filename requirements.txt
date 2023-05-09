@@ -1,7 +1,4 @@
 gdown
-numpy
-pandas
-Pillow
+h5py
 torch
 torchvision
-wilds

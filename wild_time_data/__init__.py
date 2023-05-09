@@ -1,7 +1,8 @@
-__version__ = "0.0.5"
+__version__ = "0.1.0"
 
 from wild_time_data.core import (
     available_time_steps,
+    default_transform,
     input_dim,
     list_datasets,
     load_dataset,
