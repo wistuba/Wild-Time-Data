@@ -83,7 +83,7 @@ Several other functions can be imported from ``wild_time_data``.
 FMoW Dataset
 ============
 
-If you want to use the FMoW dataset, please follow `the instructions to prepare it <https://github.com/wistuba/Wild-Time-Data/tree/main/converter>`.
+If you want to use the FMoW dataset, please follow `the instructions to prepare it <https://github.com/wistuba/Wild-Time-Data/tree/main/converter>`__.
 
 
 Licenses
