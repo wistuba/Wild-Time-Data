@@ -9,6 +9,21 @@ import numpy as np
 from PIL import Image
 from wilds import get_dataset
 
+import ssl
+import os
+
+# Disable SSL authentication (temporary solution)
+ssl._create_default_https_context = ssl._create_unverified_context
+
+# Or set the certificate path
+try:
+    import certifi
+    os.environ['SSL_CERT_FILE'] = certifi.where()
+    os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
+except ImportError:
+    pass
+
+
 
 class FMoW:
     time_steps = list(range(16))
