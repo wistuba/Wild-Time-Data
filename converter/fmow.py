@@ -1,6 +1,7 @@
 import argparse
 import os
 import pickle
+import ssl
 from pathlib import Path
 
 import gdown
@@ -8,6 +9,9 @@ import h5py
 import numpy as np
 from PIL import Image
 from wilds import get_dataset
+
+# Handle expired certificates for the wilds package
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 class FMoW:
@@ -60,6 +64,8 @@ if __name__ == "__main__":
     parser.add_argument("--data-dir", type=str, help="Folder where output file will be stored to.")
     args = parser.parse_args()
     splits = {"train": 0, "test": 1}
+
+    os.makedirs(args.data_dir, exist_ok=True)
     with h5py.File(str(Path(args.data_dir) / "fmow.hdf5"), "w") as f:
         for time_step in FMoW.time_steps:
             time_key = str(time_step)

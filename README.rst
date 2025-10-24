@@ -31,7 +31,7 @@ The data will be downloaded to ``wild-time-data/`` unless it was downloaded into
 
   from wild_time_data import load_dataset
 
-  load_dataset(dataset_name="arxiv", time_step=2023, split="train", data_dir="wild-time-data")
+  load_dataset(dataset_name="arxiv", time_step=2022, split="train", data_dir="wild-time-data")
 
 In the following we provide details about the available argument options.
 
